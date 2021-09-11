@@ -6,6 +6,7 @@ import numpy as np
 import tensorflow as tf
 import multiprocessing as mp
 import json
+import zipfile
 from cddd.input_pipeline import InputPipelineInferEncode, InputPipelineInferDecode
 from cddd.hyperparameters import add_arguments, create_hparams
 from cddd.model_helper import build_models
