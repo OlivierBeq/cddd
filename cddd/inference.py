@@ -21,7 +21,7 @@ _default_model_dir = os.path.join(DEFAULT_DATA_DIR, 'default_model')
 
 def download_model(model_dir):
     if not os.path.isdir(model_dir):
-        sys.apth.append(DEFAULT_DATA_DIR)
+        sys.path.append(DEFAULT_DATA_DIR)
         from download_pretrained import download_file_from_google_drive, FILE_ID
         parent_dir = os.path.abspath(os.path.join(model_dir, os.pardir))
         destination = os.path.join(parent_dir, "default_model.zip")
