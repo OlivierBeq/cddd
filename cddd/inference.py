@@ -1,11 +1,11 @@
 """Helper functions to run inference on trained models"""
 import argparse
 import os
+import sys
 import numpy as np
 import tensorflow as tf
 import multiprocessing as mp
 import json
-import os
 from cddd.input_pipeline import InputPipelineInferEncode, InputPipelineInferDecode
 from cddd.hyperparameters import add_arguments, create_hparams
 from cddd.model_helper import build_models
@@ -18,6 +18,16 @@ except ImportError:
 
 _default_model_dir = os.path.join(DEFAULT_DATA_DIR, 'default_model')
 
+
+def download_model(model_dir):
+    if not os.path.isdir(model_dir):
+        sys.apth.append(DEFAULT_DATA_DIR)
+        from download_pretrained import download_file_from_google_drive, FILE_ID
+        parent_dir = os.path.abspath(os.path.join(model_dir, os.pardir))
+        destination = os.path.join(parent_dir, "default_model.zip")
+        download_file_from_google_drive(FILE_ID, destination)
+        with zipfile.ZipFile(destination, 'r') as zip_ref:
+            zip_ref.extractall(parent_dir)
 
 def sequence2embedding(model, hparams, seq_list):
     """Helper Function to run a forwards path up to the bottneck layer (ENCODER).
@@ -99,6 +109,7 @@ class InferenceModel(object):
         flags = parser.parse_args([])
         flags.hparams_from_file = True
         flags.save_dir = model_dir
+        download_model(model_dir)
         self.hparams = create_hparams(flags)
         self.hparams.set_hparam("save_dir", model_dir)
         self.hparams.set_hparam("batch_size", batch_size)
