@@ -7,25 +7,13 @@ FILE_ID = "1oyknOulq_j0w9kzOKKIHdTLo5HphT99h"
 PRETRAINED_MODEL_DIR = user_data_dir("cddd")
 
 def download_file_from_google_drive(id, destination):
-    URL = "https://docs.google.com/uc?export=download"
+    URL = f"https://drive.google.com/uc?id={id}&confirm=t"
 
     session = requests.Session()
 
-    response = session.get(URL, params = { 'id' : id }, stream=True)
-    token = get_confirm_token(response)
-
-    if token:
-        params = { 'id' : id, 'confirm' : token }
-        response = session.get(URL, params = params, stream = True)
+    response = session.get(URL, stream=True)
 
     save_response_content(response, destination)
-
-def get_confirm_token(response):
-    for key, value in response.cookies.items():
-        if key.startswith('download_warning'):
-            return value
-
-    return None
 
 def save_response_content(response, destination):
     CHUNK_SIZE = 32768
